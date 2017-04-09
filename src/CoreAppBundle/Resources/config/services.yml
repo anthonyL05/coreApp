@@ -1,4 +1,4 @@
 services:
     core.app:
-        class: CoreAppBundle\Service\App
-        arguments: ['%kernel.root_dir%']
+        class: CoreAppBundle\Service\CoreApp
+        arguments: ['%kernel.root_dir%','%neo4j-app%']

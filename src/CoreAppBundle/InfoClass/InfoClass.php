@@ -6,8 +6,11 @@
  * Time: 11:45
  */
 
-namespace CoreAppBundle\InfoCLass;
+namespace CoreAppBundle\InfoClass;
 
+use CoreAppBundle\ClassGestion\GeneratorClass;
+use CoreAppBundle\ClassGestion\Loader;
+use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\GeneratorBundle\Generator\Generator;
 
 class InfoClass
@@ -26,11 +29,15 @@ class InfoClass
 
     private $rootDir;
 
+    /** @var  ArrayCollection */
+    private $classCall;
+
     /**
      * infoClass constructor.
      */
     public function __construct($rootDir ,$className,$path = "AppBundle\\Entity")
     {
+        $this->classCall = new ArrayCollection();
         $this->rootDir = $rootDir;
         $this->className = $className;
         $this->namespace = $path;
@@ -58,25 +65,6 @@ class InfoClass
     {
         return $this->rootDir;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     /**
@@ -111,6 +99,21 @@ class InfoClass
         $this->namespace = $namespace;
     }
 
+    public function addClassCall($classCall)
+    {
+        if(!$this->getClassCall()->contains($classCall))
+        {
+            $this->classCall->add($classCall);
+        }
+    }
+    public function getClassCall()
+    {
+        return $this->classCall;
+    }
+    public function removeClassCall($classCall)
+    {
+        $this->classCall->remove($classCall);
+    }
 
 
 

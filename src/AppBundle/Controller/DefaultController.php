@@ -15,7 +15,7 @@ class DefaultController extends Controller
     public function indexAction(Request $request)
     {
         $app = $this->get('core.app');
-        $app->generateClass();
+        $app->generateCore();
         die();
     }
 }

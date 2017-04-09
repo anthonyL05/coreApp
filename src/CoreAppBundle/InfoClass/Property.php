@@ -6,7 +6,7 @@
  * Time: 17:15
  */
 
-namespace CoreAppBundle\InfoCLass;
+namespace CoreAppBundle\InfoClass;
 
 
 class Property

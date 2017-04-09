@@ -9,7 +9,10 @@
 namespace CoreAppBundle\ClassGestion;
 
 
-use CoreAppBundle\InfoCLass\InfoClass;
+use CoreAppBundle\InfoClass\InfoClass;
+use CoreAppBundle\InfoClass\Methode;
+use CoreAppBundle\InfoClass\Parameter;
+use CoreAppBundle\InfoClass\Property;
 
 class GeneratorClass
 {
@@ -48,9 +51,8 @@ $className {
 
 }
 EOF;
+
         file_put_contents($infoClass->getRootDir().'\\' . $infoClass->getNamespace()."\\".$infoClass->getClassName() . ".php",$contentClass);
-        dump($contentClass);
-        die();
     }
 
     public function generateUse()

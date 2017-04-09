@@ -9,19 +9,19 @@
 namespace CoreAppBundle\ClassGestion;
 
 
-use CoreAppBundle\InfoCLass\Construct;
-use CoreAppBundle\InfoCLass\ContentClass;
-use CoreAppBundle\InfoCLass\InfoClass;
-use CoreAppBundle\InfoCLass\Methode;
-use CoreAppBundle\InfoCLass\Parameter;
-use CoreAppBundle\InfoCLass\Property;
+use CoreAppBundle\InfoClass\Construct;
+use CoreAppBundle\InfoClass\ContentClass;
+use CoreAppBundle\InfoClass\InfoClass;
+use CoreAppBundle\InfoClass\Methode;
+use CoreAppBundle\InfoClass\Parameter;
+use CoreAppBundle\InfoClass\Property;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class Loader
 {
-    /** @var  InfoClass $infoClass */
-    private $infoClass;
+    /** @var  InfoClass $InfoClass */
+    private $InfoClass;
 
     /** @var  \ReflectionClass $reflexionCLass */
     private $reflexionCLass;
@@ -51,14 +51,14 @@ class Loader
     /**
      * Loader constructor.
      */
-    public function __construct(InfoClass $infoClass)
+    public function __construct(InfoClass $InfoClass)
     {
         $this->contentClass = new ContentClass();
         $this->properties = new ArrayCollection();
         $this->uses = new ArrayCollection();
         $this->methodes = new ArrayCollection();
-        $this->infoClass = $infoClass;
-        $className = $infoClass->getNamespace()."\\".$infoClass->getClassName();
+        $this->InfoClass = $InfoClass;
+        $className = $InfoClass->getNamespace()."\\".$InfoClass->getClassName();
         $this->class = new $className();
         $this->reflexionCLass = new \ReflectionClass($this->class);
         $this->phpDocClass = $this->reflexionCLass->getDocComment();
@@ -121,7 +121,7 @@ class Loader
     private function loadUse()
     {
         $content = $this->contentClass->getContent();
-        $content = explode("class ".$this->infoClass->getClassName(), $content);
+        $content = explode("class ".$this->InfoClass->getClassName(), $content);
         $content = $content[0];
         $content = explode(";",$content);
         foreach($content as $contenu)
@@ -184,9 +184,17 @@ class Loader
     public function addUse($use)
     {
         $uses = explode("\\",$use);
+
         $useMaj = array();
         foreach ($uses as $use) {
-            $useMaj[] = ucfirst($use);
+            if($use == $uses[0])
+            {
+                $useMaj[] = $use;
+            }
+            else
+            {
+                $useMaj[] = ucfirst($use);
+            }
         }
         $use = implode("\\",$useMaj);
         if(!$this->getUse()->contains($use))
@@ -246,6 +254,23 @@ class Loader
     {
         $this->construct = $construct;
     }
+
+    /**
+     * @return \ReflectionClass
+     */
+    public function getReflexionCLass()
+    {
+        return $this->reflexionCLass;
+    }
+
+    /**
+     * @param \ReflectionClass $reflexionCLass
+     */
+    public function setReflexionCLass($reflexionCLass)
+    {
+        $this->reflexionCLass = $reflexionCLass;
+    }
+
 
 
 

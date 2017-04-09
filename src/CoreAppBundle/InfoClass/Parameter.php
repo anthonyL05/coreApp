@@ -6,7 +6,7 @@
  * Time: 17:40
  */
 
-namespace CoreAppBundle\InfoCLass;
+namespace CoreAppBundle\InfoClass;
 
 
 class Parameter

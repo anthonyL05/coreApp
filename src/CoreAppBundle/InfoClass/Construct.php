@@ -6,7 +6,7 @@
  * Time: 12:22
  */
 
-namespace CoreAppBundle\InfoCLass;
+namespace CoreAppBundle\InfoClass;
 
 
 use Doctrine\Common\Collections\ArrayCollection;

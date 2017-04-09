@@ -6,7 +6,7 @@
  * Time: 17:06
  */
 
-namespace CoreAppBundle\InfoCLass;
+namespace CoreAppBundle\InfoClass;
 
 
 class ContentClass
