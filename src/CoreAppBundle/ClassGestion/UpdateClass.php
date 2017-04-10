@@ -88,16 +88,19 @@ class UpdateClass
         if($set == 0)
         {
             $methode = $this->generateMethode($class , "set",$propertyName);
+            $infoClass->getLoader()->addUse("use AppBundle\\Entity\\".$class.";");
             $infoClass->getLoader()->addMethode($methode);
         }
         if($remove == 0)
         {
             $methode = $this->generateMethode($class , "remove",$propertyName);
+            $infoClass->getLoader()->addUse("use AppBundle\\Entity\\".$class.";");
             $infoClass->getLoader()->addMethode($methode);
         }
         if($add == 0)
         {
             $methode = $this->generateMethode($class , "add",$propertyName);
+            $infoClass->getLoader()->addUse("use AppBundle\\Entity\\".$class.";");
             $infoClass->getLoader()->addMethode($methode);
         }
 
@@ -109,8 +112,12 @@ class UpdateClass
         $methode = new Methode();
         $parameter = new Parameter();
         $methode->setMethodeName($type.$className);
-        $parameter->setName(lcfirst($className));
-        $methode->addParameters($parameter);
+        if($type != "get")
+        {
+            $parameter->setName(lcfirst($className));
+            $parameter->setType($className);
+            $methode->addParameters($parameter);
+        }
         $methode->setModifier("public");
         $returnGet = "return \$this->".$propertyName;
         $returnthis = "return \$this";

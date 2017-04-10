@@ -32,21 +32,31 @@ class InfoClass
     /** @var  ArrayCollection */
     private $classCall;
 
+    /** @var  ArrayCollection $infoClassContain */
+    private $infoClassContain;
+
     /**
      * infoClass constructor.
      */
-    public function __construct($rootDir ,$className,$path = "AppBundle\\Entity")
+    public function __construct($exist , $rootDir ,$className,$path = "AppBundle\\Entity")
     {
         $this->classCall = new ArrayCollection();
+        $this->infoClassContain = new ArrayCollection();
         $this->rootDir = $rootDir;
         $this->className = $className;
         $this->namespace = $path;
         $this->generatorClass =  new GeneratorClass($this);
-        $this->loader = new Loader($this);
+        $this->loader = new Loader($this,$exist);
+
     }
 
     public function generateClass()
     {
+        /** @var InfoClass $infoClass */
+        foreach ($this->infoClassContain as $infoClass)
+        {
+            $infoClass->getGeneratorClass()->generateClass();
+        }
         $this->generatorClass->generateClass();
     }
 
@@ -112,8 +122,32 @@ class InfoClass
     }
     public function removeClassCall($classCall)
     {
-        $this->classCall->remove($classCall);
+        $this->infoClassContain->remove($classCall);
     }
+    public function addInfoClassContain($infoClassContain)
+    {
+        if(!$this->getInfoClassContain()->contains($infoClassContain))
+        {
+            $this->infoClassContain->add($infoClassContain);
+        }
+    }
+    public function getInfoClassContain()
+    {
+        return $this->infoClassContain;
+    }
+    public function removeInfoClassContain($infoClassContain)
+    {
+        $this->infoClassContain->remove($infoClassContain);
+    }
+
+    /**
+     * @return Generator
+     */
+    public function getGeneratorClass()
+    {
+        return $this->generatorClass;
+    }
+
 
 
 

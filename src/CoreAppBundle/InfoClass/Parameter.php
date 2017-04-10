@@ -14,6 +14,15 @@ class Parameter
 
     private $name;
 
+    private $type;
+
+
+    public function __construct()
+    {
+        $this->type = "";
+    }
+
+
     /**
      * @return mixed
      */
@@ -29,6 +38,23 @@ class Parameter
     {
         $this->name = $name;
     }
+
+    /**
+     * @return null
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param null $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
 
 
 }

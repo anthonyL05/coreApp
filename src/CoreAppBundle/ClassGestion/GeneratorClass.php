@@ -94,7 +94,7 @@ EOF;
         /** @var Parameter $param */
         foreach ($params as $param)
         {
-            $paramsReturn .= '$'.$param->getName()." ";
+            $paramsReturn .= $param->getType().' $'.$param->getName()." ";
         }
         $content = trim($infoClass->getLoader()->getConstruct()->getContent());
 
@@ -121,7 +121,7 @@ EOF;
             /** @var Parameter $param */
             foreach ($params as $param)
             {
-                $paramsReturn .= '$'.$param->getName()." ";
+                $paramsReturn .= $param->getType().' $'.$param->getName()." ";
             }
             $modifier = $methode->getModifier();
             $content = trim($methode->getContent());
@@ -132,7 +132,6 @@ EOF;
     {
         $content
     }\r\n
-    \r\n
 EOF;
 
         }

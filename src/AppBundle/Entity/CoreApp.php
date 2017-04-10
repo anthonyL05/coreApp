@@ -2,8 +2,9 @@
 
 namespace AppBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use CoreAppBundle\Annotation\Core;
+use Doctrine\Common\Collections\ArrayCollection;
+use AppBundle\Entity\Person;
 
 
 class CoreApp {
@@ -24,22 +25,16 @@ class CoreApp {
     {
         return $this->persons;
     }
-
     
-    
-    public function removePerson($person )
+    public function removePerson(Person $person )
     {
         $this->persons->remove($person);
     }
-
     
-    
-    public function addPerson($person )
+    public function addPerson(Person $person )
     {
         $this->persons->add($person);
     }
-
-    
 
 
 }

@@ -51,7 +51,7 @@ class Loader
     /**
      * Loader constructor.
      */
-    public function __construct(InfoClass $InfoClass)
+    public function __construct(InfoClass $InfoClass,$exist)
     {
         $this->contentClass = new ContentClass();
         $this->properties = new ArrayCollection();
@@ -59,16 +59,25 @@ class Loader
         $this->methodes = new ArrayCollection();
         $this->InfoClass = $InfoClass;
         $className = $InfoClass->getNamespace()."\\".$InfoClass->getClassName();
-        $this->class = new $className();
-        $this->reflexionCLass = new \ReflectionClass($this->class);
-        $this->phpDocClass = $this->reflexionCLass->getDocComment();
-        $this->contentClass->setContent(file_get_contents(__DIR__."..\\..\\..\\".$className . ".php"));
-        $this->annotationReader = new AnnotationReader();
-        $this->loadUse();
-        $this->loadConstruct();
-        $this->loadPhpDocHeader();
-        $this->loadProperty();
-        $this->loadMethodes();
+        if($exist == true)
+        {
+            $this->class = new $className();
+            $this->reflexionCLass = new \ReflectionClass($this->class);
+            $this->phpDocClass = $this->reflexionCLass->getDocComment();
+            $this->contentClass->setContent(file_get_contents(__DIR__."..\\..\\..\\".$className . ".php"));
+            $this->annotationReader = new AnnotationReader();
+            $this->loadUse();
+            $this->loadConstruct();
+            $this->loadPhpDocHeader();
+            $this->loadProperty();
+            $this->loadMethodes();
+        }
+        else
+        {
+            $construct = new Construct();
+            $this->setConstruct($construct);
+        }
+
     }
 
     public function loadPhpDocHeader()
