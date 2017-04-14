@@ -1,0 +1,4 @@
+services:
+#    neo4j.example:
+#        class: Neo4jBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]

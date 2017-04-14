@@ -34,7 +34,7 @@ class Reader
             {
                 if ($readerProperty->className != null)
                 {
-                    $infoClass->addClassCall(array($readerProperty->className, "collection",$property->name));
+                    $infoClass->addClassCall(array($readerProperty->className, "collection",$property->name,"enity"));
                 }
             }
         }

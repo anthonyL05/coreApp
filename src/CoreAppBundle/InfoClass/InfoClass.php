@@ -35,6 +35,9 @@ class InfoClass
     /** @var  ArrayCollection $infoClassContain */
     private $infoClassContain;
 
+    /** @var  ArrayCollection $extends */
+    private $extends;
+
     /**
      * infoClass constructor.
      */
@@ -42,6 +45,7 @@ class InfoClass
     {
         $this->classCall = new ArrayCollection();
         $this->infoClassContain = new ArrayCollection();
+        $this->extends = new ArrayCollection();
         $this->rootDir = $rootDir;
         $this->className = $className;
         $this->namespace = $path;
@@ -55,7 +59,7 @@ class InfoClass
         /** @var InfoClass $infoClass */
         foreach ($this->infoClassContain as $infoClass)
         {
-            $infoClass->getGeneratorClass()->generateClass();
+            $infoClass->generatorClass->generateClass();
         }
         $this->generatorClass->generateClass();
     }
@@ -140,15 +144,23 @@ class InfoClass
         $this->infoClassContain->remove($infoClassContain);
     }
 
-    /**
-     * @return Generator
-     */
-    public function getGeneratorClass()
+
+    public function getExtends()
     {
-        return $this->generatorClass;
+        return $this->extends;
     }
 
-
+    public function addExtends($extend)
+    {
+        if(!$this->getExtends()->contains($extend))
+        {
+            $this->extends->add($extend);
+        }
+    }
+    public function removeExtend($extend)
+    {
+        $this->extends->remove($extend);
+    }
 
 
 }

@@ -30,6 +30,15 @@ class GeneratorClass
         $infoClass = $this->infoClass;
         $namespace = "namespace ".$infoClass->getNamespace().";";
         $className = "class ".$infoClass->getCLassName();
+        if(count($infoClass->getExtends()) > 0)
+        {
+            $className = $className ." extends";
+            foreach ($infoClass->getExtends() as $extend)
+            {
+                $className .= " ".$extend;
+            }
+        }
+
         $property = $this->generateProperty();
         $construct = $this->generatConstruct();
         $methode  = $this->generateMethode();
@@ -105,7 +114,6 @@ EOF;
         $content
     }
 EOF;
-
         return $retourConstruct;
     }
 

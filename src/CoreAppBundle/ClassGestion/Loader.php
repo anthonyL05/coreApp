@@ -51,14 +51,15 @@ class Loader
     /**
      * Loader constructor.
      */
-    public function __construct(InfoClass $InfoClass,$exist)
+    public function __construct(InfoClass $infoClass,$exist)
     {
+
         $this->contentClass = new ContentClass();
         $this->properties = new ArrayCollection();
         $this->uses = new ArrayCollection();
         $this->methodes = new ArrayCollection();
-        $this->InfoClass = $InfoClass;
-        $className = $InfoClass->getNamespace()."\\".$InfoClass->getClassName();
+        $this->InfoClass = $infoClass;
+        $className = $infoClass->getNamespace()."\\".$infoClass->getClassName();
         if($exist == true)
         {
             $this->class = new $className();
@@ -71,6 +72,7 @@ class Loader
             $this->loadPhpDocHeader();
             $this->loadProperty();
             $this->loadMethodes();
+            $this->loadExtend();
         }
         else
         {
@@ -97,16 +99,19 @@ class Loader
 
     public function loadContentFunction($functionName)
     {
+        // have problem when generate constructeur if parent construct;
+        $functionName = "function ".$functionName;
         $content = explode($functionName,$this->contentClass->getContent())[1];
         $content = explode("{",$content);
+        // because we have parameter in zero
         $countEndFunction = 1;
         $loop = 1;
         $return = "";
         while(true)
         {
+
             if(substr_count($content[$loop],"}") >= $countEndFunction)
             {
-
                 $explode = explode("}",$content[$loop]);
                 array_pop($explode);
                 if(substr_count($content[$loop],"}") > $countEndFunction)
@@ -123,8 +128,6 @@ class Loader
                 $loop++;
             }
         }
-
-        return $content;
     }
 
     private function loadUse()
@@ -157,36 +160,53 @@ class Loader
 
     public function loadMethodes()
     {
+
         foreach($this->reflexionCLass->getMethods() as $methodsReflexion)
         {
-            if($methodsReflexion->getName() != "__construct")
+            if($methodsReflexion->getDeclaringClass()== $this->InfoClass->getClassName())
             {
-                $methode = new Methode();
-                $methode->setMethodeName($methodsReflexion->getName());
-                $methode->setPhpdoc($methodsReflexion->getDocComment());
-                $modifiers = \Reflection::getModifierNames($methodsReflexion->getModifiers());
-                $methode->setModifier(implode(" ",$modifiers));
-                foreach ($methodsReflexion->getParameters() as $parameterReflexion)
+                if($methodsReflexion->getName() != "__construct")
                 {
-                    /** TODO take back the type of parameters if exist */
-                    $parameter = new Parameter();
-                    $parameter->setName($parameterReflexion->getName());
-                    $methode->addParameters($parameter);
+                    $methode = new Methode();
+                    $methode->setMethodeName($methodsReflexion->getName());
+                    $methode->setPhpdoc($methodsReflexion->getDocComment());
+                    $modifiers = \Reflection::getModifierNames($methodsReflexion->getModifiers());
+                    $methode->setModifier(implode(" ",$modifiers));
+                    foreach ($methodsReflexion->getParameters() as $parameterReflexion)
+                    {
+                        /** TODO take back the type of parameters if exist */
+                        $parameter = new Parameter();
+                        $parameter->setName($parameterReflexion->getName());
+                        $methode->addParameters($parameter);
+                    }
+                    $methode->setContent($this->loadContentFunction($methode->getMethodeName()));
+                    $this->methodes->add($methode);
                 }
-                $methode->setContent($this->loadContentFunction('function '.$methode->getMethodeName()));
-                $this->methodes->add($methode);
-            }
-            else
-            {
-                foreach ($methodsReflexion->getParameters() as $parameterReflexion)
+                else
                 {
-                    /** TODO take back the type of parameters if exist */
-                    $parameter = new Parameter();
-                    $parameter->setName($parameterReflexion->getName());
-                    $this->construct->addParameters($parameter);
+                    foreach ($methodsReflexion->getParameters() as $parameterReflexion)
+                    {
+                        /** TODO take back the type of parameters if exist */
+                        $parameter = new Parameter();
+                        $parameter->setName($parameterReflexion->getName());
+                        $this->construct->addParameters($parameter);
+                    }
                 }
             }
+
         }
+    }
+
+    public function loadExtend()
+    {
+        if($this->reflexionCLass->getParentClass() != null)
+        {
+            $extend = $this->reflexionCLass->getParentClass()->getName();
+            $extend = explode("\\",$extend);
+            $extend = array_pop($extend);
+            $this->InfoClass->addExtends($extend);
+        }
+
     }
 
 
