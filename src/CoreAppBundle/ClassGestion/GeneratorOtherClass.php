@@ -11,6 +11,8 @@ namespace CoreAppBundle\ClassGestion;
 
 use CoreAppBundle\InfoClass\Construct;
 use CoreAppBundle\InfoClass\InfoClass;
+use CoreAppBundle\InfoClass\Methode;
+use CoreAppBundle\InfoClass\Parameter;
 
 class GeneratorOtherClass
 {
@@ -31,6 +33,7 @@ class GeneratorOtherClass
             $infoClassNew->getLoader()->addUse("use Neo4jBundle\\Entity\\GlobalEntity;");
             $infoClassNew->getLoader()->getConstruct()->setContent($this->addParentConstruct($infoClassNew->getLoader()->getConstruct()->getContent()));
             $infoClassNew->addExtends("GlobalEntity");
+            $infoClassNew = $this->addOtherClassPossible($infoClassNew);
             $infoClass->addInfoClassContain($infoClassNew);
         }
         return $infoClass;
@@ -46,5 +49,34 @@ class GeneratorOtherClass
         }
         return $contentConstruct;
     }
+
+    public function addOtherClassPossible(InfoClass $infoClass)
+    {
+        /** @var Methode $methodeExist */
+        foreach ($infoClass->getLoader()->getMethodes() as $methodeExist)
+        {
+            if($methodeExist->getMethodeName() == "classPossible")
+            {
+                return $infoClass;
+            }
+        }
+        $methode = new Methode();
+        $methode->setMethodeName("classPossible");
+        $parameter = new Parameter();
+        $parameter->setName("className");
+        $methode->addParameters($parameter);
+        $contains = '$containClass = new ArrayCollection();';
+        $return = 'return $this->getClassPossible($containClass,$className);';
+        $content = <<<EOF
+    $contains
+        $return
+EOF;
+        $methode->setContent($content);
+        $infoClass->getLoader()->addMethode($methode);
+        $infoClass->getLoader()->addUse("use Doctrine\\Common\\Collections\\ArrayCollection;");
+        return $infoClass;
+
+    }
+
 
 }
