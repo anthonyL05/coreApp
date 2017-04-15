@@ -17,7 +17,7 @@ class Maison extends GlobalEntity {
     }
 
         
-     function classPossible($className )
+     function classPossible( $className )
     {
         $containClass = new ArrayCollection();
         return $this->getClassPossible($containClass,$className);

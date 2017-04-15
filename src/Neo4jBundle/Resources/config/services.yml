@@ -1,4 +1,8 @@
 services:
-#    neo4j.example:
-#        class: Neo4jBundle\Example
-#        arguments: ["@service_id", "plain_value", "%parameter%"]
+    neo4j_connection:
+        class: Neo4jBundle\Service\Connection
+        arguments: [http://%neo4j-user%:%neo4j-pwd%@%neo4j-client%:%neo4j-port%]
+    neo4j_manager:
+        class: Neo4jBundle\Service\EntityManager
+        calls:
+                    - [setConnection, ['@neo4j_connection']]
