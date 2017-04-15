@@ -16,6 +16,7 @@ class GeneratorOtherClass
 {
     public function checkOtherClass(InfoClass $infoClass,$rootDir)
     {
+
         foreach ( $infoClass->getClassCall() as $otherClass)
         {
             $className = $otherClass[0];
@@ -37,7 +38,9 @@ class GeneratorOtherClass
 
     public function addParentConstruct($contentConstruct)
     {
-        if(strstr("parent::__construct();",$contentConstruct) != false)
+
+
+        if(substr_count($contentConstruct,"parent::__construct();") == 0)
         {
             $contentConstruct = "parent::__construct(); \r\n".$contentConstruct;
         }
