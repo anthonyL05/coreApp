@@ -39,6 +39,16 @@ class RepositoryInfo
         return $this->reflexionClass;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getEmptyClass()
+    {
+        return $this->emptyClass;
+    }
+
+
+
 
 
 

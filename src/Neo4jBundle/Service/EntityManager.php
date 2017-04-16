@@ -57,7 +57,6 @@ class EntityManager
         /** todo check if the node is already persist then modify it */
         $this->persistNode->add(array('node'=>$node , 'action' => 'CREATE'));
     }
-
     public function flush()
     {
         if(count($this->persistNode) > 0)
@@ -111,7 +110,7 @@ class EntityManager
         }
         $request = $request.") RETURN p";
 
-        /** @var Result $retourRequete */
+        /** @var Result $requestResult */
         $requestResult = $this->conection->executRequete($request);
 
         dump($requestResult);

@@ -13,6 +13,7 @@ namespace Neo4jBundle\Annotation;
 
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use GraphAware\Neo4j\Client\Formatter\RecordView;
 use Neo4jBundle\Ogm\Atribut;
 use Neo4jBundle\Ogm\Label;
 use Neo4jBundle\Ogm\Node;
@@ -45,11 +46,6 @@ class Reader
         $node = new Node();
         $node = $this->creeNodeClass($node,$entity,$repositoryInfo);
         return $node;
-
-
-
-
-
     }
 
     public function creeNodeClass(Node $node,$entity,RepositoryInfo$repositoryInfo)
@@ -106,7 +102,55 @@ class Reader
         }
         $node->addAtribut($atribut);
         return $node;
+    }
+
+    public function getResult(RecordView $nodeResult , RepositoryInfo $repositoryInfo,$type)
+    {
+        /**
+         * TODO check the type "find all ..."
+         */
+        /** @var  \GraphAware\Neo4j\Client\Formatter\Type\Node $nodeValue */
+        $nodeValue = $nodeResult->values()[0];
+        $entity = Clone($repositoryInfo->getEmptyClass());
+        foreach ($nodeValue->asArray() as $propertyNameReel  => $property)
+        {
+            $propertyName = $this->getPropertyName($propertyNameReel,$repositoryInfo->getReflexionClass());
+            if($repositoryInfo->getReflexionClass()->hasMethod("set" . $propertyName) != null)
+            {
+                $methodeName =$repositoryInfo->getReflexionClass()->getMethod("set" . $propertyName)->getName();
+                $entity->$methodeName($property);
+            }
+
+
+        }
+        return $entity;
+    }
+
+    public function getPropertyName($propertyNameReel, \ReflectionClass $reflectionClass)
+    {
+        $reader = new AnnotationReader();
+        foreach($reflectionClass->getProperties() as $property) {
+            $readerProperty = $reader->getPropertyAnnotation($property, 'Neo4jBundle\Annotation\AnnotationProperty');
+            if ($readerProperty) {
+                if($readerProperty->name == $propertyNameReel)
+                {
+                    $propertyName = $property->getName();
+                }
+
+            }
+        }
+        if(isset($propertyName))
+        {
+            return $propertyName;
+        }
+        else
+        {
+            /**
+             * TODO the property didnt exist its maybe in contains class or an other property
+             */
+        }
 
     }
+
 
 }

@@ -5,32 +5,30 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Person;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
 {
-    /**
-     * @Route("/a", name="homepage")
-     */
-    public function indexAction(Request $request)
+
+    public function indexAction()
     {
         $app = $this->get('core.app');
         $app->generateCore();
         die();
     }
 
-
+    /**
+     * @Route("/")
+     */
     public function FindAllTesteAction()
     {
         $em = $this->get('neo4j_manager');
         $personRepository = $em->getRepository('Person');
         $persons = $personRepository->findAll();
+        dump($persons);
         die();
     }
 
-    /**
-     * @Route("/")
-     */
+
     public function PersistTestAction()
     {
         $em = $this->get('neo4j_manager');

@@ -2,8 +2,8 @@
 
 namespace AppBundle\Entity;
 
-use Neo4jBundle\Annotation\AnnotationProperty;
 use Neo4jBundle\Annotation\AnnotationClass;
+use Neo4jBundle\Annotation\AnnotationProperty;
 use Neo4jBundle\Entity\GlobalEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -13,9 +13,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Person extends GlobalEntity {
 
     /**
+     * @var string $nom
      * @AnnotationProperty(name="person_name")
+     *
      */
-    private $name;
+    private $nom;
 
         
     public function __construct()
@@ -31,19 +33,19 @@ class Person extends GlobalEntity {
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getName()
+    public function getNom()
     {
-        return $this->name;
+        return $this->nom;
     }
 
     /**
-     * @param mixed $name
+     * @param string $nom
      */
-    public function setName($name)
+    public function setNom($nom)
     {
-        $this->name = $name;
+        $this->nom = $nom;
     }
 
 

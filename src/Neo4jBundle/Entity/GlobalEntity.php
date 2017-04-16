@@ -26,7 +26,7 @@ class GlobalEntity
     {
         $class = new ArrayCollection();
         $relation = new ArrayCollection();
-        $relation = new ArrayCollection();
+        $relationPossible = new ArrayCollection();
     }
 
 
@@ -43,7 +43,7 @@ class GlobalEntity
         if($className == null)
         {
             return $this->class;
-        }
+    }
         /**
          * todo check if the function is create or see for implement
          */
