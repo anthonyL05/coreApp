@@ -13,12 +13,14 @@ namespace Neo4jBundle\Annotation;
 
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Collections\ArrayCollection;
 use GraphAware\Neo4j\Client\Formatter\RecordView;
 use Neo4jBundle\Ogm\Atribut;
 use Neo4jBundle\Ogm\Label;
 use Neo4jBundle\Ogm\Node;
 use Neo4jBundle\Repository\Repository;
 use Neo4jBundle\Repository\RepositoryInfo;
+use Neo4jBundle\Service\Connection;
 
 class Reader
 {
@@ -40,15 +42,15 @@ class Reader
         return $label;
     }
 
-    public function get($entity,RepositoryInfo $repositoryInfo)
+    public function get($entity,RepositoryInfo $repositoryInfo,Connection $connection)
     {
         // on cree la node a remplir
         $node = new Node();
-        $node = $this->creeNodeClass($node,$entity,$repositoryInfo);
+        $node = $this->creeNodeClass($node,$entity,$repositoryInfo,$connection);
         return $node;
     }
 
-    public function creeNodeClass(Node $node,$entity,RepositoryInfo$repositoryInfo)
+    public function creeNodeClass(Node $node,$entity,RepositoryInfo $repositoryInfo,Connection $connection)
     {
         $reader = new AnnotationReader();
         $readerClassAnnotation = $reader->getClassAnnotation($repositoryInfo->getReflexionClass(), 'Neo4jAccesBundle\Annotation\AnnotationClass');
@@ -62,7 +64,15 @@ class Reader
 
             }
         }
+        foreach ($entity->getClass() as $entityPossible)
+        {
+            $entityName = explode('\\',get_class($entityPossible));
+            $entityName =array_pop($entityName);
+            $repository = new Repository($entityName,$connection);
+            $node = $this->creeNodeClass($node,$entityPossible,$repository->getRepositoryInfo(),$connection);
+        }
         return $node;
+
     }
 
 
@@ -110,8 +120,10 @@ class Reader
          * TODO check the type "find all ..."
          */
         /** @var  \GraphAware\Neo4j\Client\Formatter\Type\Node $nodeValue */
+        $propertyFind = new ArrayCollection();
         $nodeValue = $nodeResult->values()[0];
-        $entity = Clone($repositoryInfo->getEmptyClass());
+        $className = "AppBundle\\Entity\\".$repositoryInfo->getEntityName();
+        $entity = new  $className;
         foreach ($nodeValue->asArray() as $propertyNameReel  => $property)
         {
             $propertyName = $this->getPropertyName($propertyNameReel,$repositoryInfo->getReflexionClass());
@@ -120,8 +132,35 @@ class Reader
                 $methodeName =$repositoryInfo->getReflexionClass()->getMethod("set" . $propertyName)->getName();
                 $entity->$methodeName($property);
             }
-
-
+            else
+            {
+                $propertyFind->add(array($property,$propertyNameReel));
+            }
+        }
+        if(count($propertyFind) > 0)
+        {
+            /** @var \GraphAware\Neo4j\Client\Formatter\Type\Node $resultNode */
+            $resultNode = $nodeResult->values()[0];
+            $labels = $resultNode->labels();
+            foreach ($labels as $label)
+            {
+                if($label != $repositoryInfo->getEntityName())
+                {
+                    $className = "AppBundle\\Entity\\".$label;
+                    $entityPossible = new $className;
+                    $reflexionClass = new \ReflectionClass($entityPossible);
+                    foreach ($propertyFind as $property)
+                    {
+                        $propertyName = $this->getPropertyName($property[1],$reflexionClass);
+                        if($reflexionClass->hasMethod("set" . $propertyName) != null)
+                        {
+                            $methodeName =$reflexionClass->getMethod("set" . $propertyName)->getName();
+                            $entityPossible->$methodeName($property[0]);
+                            $entity->addClass($entityPossible);
+                        }
+                    }
+                }
+            }
         }
         return $entity;
     }

@@ -53,7 +53,7 @@ class EntityManager
         $pathEntityExplode = explode("\\",$pathEntity);
         $entityName = array_pop($pathEntityExplode);
         $repository = new Repository($entityName,$this->conection);
-        $node = $this->reader->get($entity,$repository->getRepositoryInfo());
+        $node = $this->reader->get($entity,$repository->getRepositoryInfo(),$this->conection);
         /** todo check if the node is already persist then modify it */
         $this->persistNode->add(array('node'=>$node , 'action' => 'CREATE'));
     }

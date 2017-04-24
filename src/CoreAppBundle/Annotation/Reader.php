@@ -28,13 +28,24 @@ class Reader
     public function updateProperty(InfoClass $infoClass)
     {
         $reflexionClass = $infoClass->getLoader()->getReflexionCLass();
-        foreach ($reflexionClass->getProperties() as $property) {
-            $readerProperty = $this->annotationReader->getPropertyAnnotation($property, 'CoreAppBundle\Annotation\Core');
-            if ($readerProperty)
-            {
-                if ($readerProperty->className != null)
+        if($reflexionClass != null)
+        {
+            foreach ($reflexionClass->getProperties() as $property) {
+                $readerProperty = $this->annotationReader->getPropertyAnnotation($property, 'CoreAppBundle\Annotation\Core');
+                if ($readerProperty)
                 {
-                    $infoClass->addClassCall(array($readerProperty->className, "collection",$property->name,"enity"));
+                    if ($readerProperty->className != null)
+                    {
+                        $infoClass->addClassCall(array($readerProperty->className, "collection",$property->name,"enity"));
+                    }
+                }
+                $readerProperty1 = $this->annotationReader->getPropertyAnnotation($property, 'Neo4jBundle\Annotation\AnnotationProperty');
+                if ($readerProperty1)
+                {
+                    if($readerProperty1->name != null)
+                    {
+                        $infoClass->addPropertyCall($property->name);
+                    }
                 }
             }
         }

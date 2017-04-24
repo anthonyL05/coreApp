@@ -16,7 +16,7 @@ use CoreAppBundle\InfoClass\Parameter;
 
 class GeneratorOtherClass
 {
-    public function checkOtherClass(InfoClass $infoClass,$rootDir)
+    public function checkOtherClass(InfoClass $infoClass,$rootDir,UpdateClass $updateClass)
     {
 
         foreach ( $infoClass->getClassCall() as $otherClass)
@@ -34,15 +34,16 @@ class GeneratorOtherClass
             $infoClassNew->getLoader()->getConstruct()->setContent($this->addParentConstruct($infoClassNew->getLoader()->getConstruct()->getContent()));
             $infoClassNew->addExtends("GlobalEntity");
             $infoClassNew = $this->addOtherClassPossible($infoClassNew);
+            $infoClassNew->generateOtherClass();
+            $infoClassNew = $updateClass->update($infoClassNew);
             $infoClass->addInfoClassContain($infoClassNew);
+            $this->checkOtherClass($infoClassNew,$rootDir,$updateClass);
         }
         return $infoClass;
     }
 
     public function addParentConstruct($contentConstruct)
     {
-
-
         if(substr_count($contentConstruct,"parent::__construct();") == 0)
         {
             $contentConstruct = "parent::__construct(); \r\n".$contentConstruct;
@@ -55,18 +56,15 @@ class GeneratorOtherClass
         /** @var Methode $methodeExist */
         foreach ($infoClass->getLoader()->getMethodes() as $methodeExist)
         {
-            if($methodeExist->getMethodeName() == "classPossible")
+            if($methodeExist->getMethodeName() == "getClassPossible")
             {
                 return $infoClass;
             }
         }
         $methode = new Methode();
-        $methode->setMethodeName("classPossible");
-        $parameter = new Parameter();
-        $parameter->setName("className");
-        $methode->addParameters($parameter);
-        $contains = '$containClass = new ArrayCollection();';
-        $return = 'return $this->getClassPossible($containClass,$className);';
+        $methode->setMethodeName("getClassPossible");
+        $contains = '$classPossible = new ArrayCollection();';
+        $return = 'return $classPossible;';
         $content = <<<EOF
     $contains
         $return

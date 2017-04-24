@@ -163,7 +163,7 @@ class Loader
 
         foreach($this->reflexionCLass->getMethods() as $methodsReflexion)
         {
-            if($methodsReflexion->getDeclaringClass()== $this->InfoClass->getClassName())
+            if($methodsReflexion->getDeclaringClass()->getName() == "AppBundle\\Entity\\".$this->InfoClass->getClassName())
             {
                 if($methodsReflexion->getName() != "__construct")
                 {
@@ -193,7 +193,6 @@ class Loader
                     }
                 }
             }
-
         }
     }
 
@@ -298,6 +297,14 @@ class Loader
     public function setReflexionCLass($reflexionCLass)
     {
         $this->reflexionCLass = $reflexionCLass;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClass()
+    {
+        return $this->class;
     }
 
 

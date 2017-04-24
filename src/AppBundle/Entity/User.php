@@ -8,16 +8,16 @@ use Neo4jBundle\Entity\GlobalEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @AnnotationClass(label="Person")
+ * @AnnotationClass(label="User")
  */
-class Person extends GlobalEntity {
+class User extends GlobalEntity {
 
         /**
-     * @var string $nom
-     * @AnnotationProperty(name="person_name")
+     * @var string $pseudo
+     * @AnnotationProperty(name="pseudo")
      *
      */
-    private $nom;
+    private $pseudo;
 
         
     public function __construct()
@@ -29,18 +29,18 @@ class Person extends GlobalEntity {
     public function getClassPossible()
     {
         $classPossible = new ArrayCollection();
-        $classPossible->add('User');
+        $classPossible->add('Person');
         return $classPossible;
     }
     
-    public function getNom()
+    public function getPseudo()
     {
-        return $this->nom;
+        return $this->pseudo;
     }
     
-    public function setNom( $nom )
+    public function setPseudo( $pseudo )
     {
-        $this->nom = $nom;        
+        $this->pseudo = $pseudo;        
         return $this;
     }
 

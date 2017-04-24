@@ -9,7 +9,7 @@ use AppBundle\Entity\Person;
 
 class CoreApp {
 
-    /**
+        /**
     *@Core(className="Person")
     */
     private $persons;
@@ -26,12 +26,12 @@ class CoreApp {
         return $this->persons;
     }
     
-    public function removePerson(Person $person )
+    public function removePerson( $person )
     {
         $this->persons->remove($person);
     }
     
-    public function addPerson(Person $person )
+    public function addPerson( $person )
     {
         $this->persons->add($person);
     }

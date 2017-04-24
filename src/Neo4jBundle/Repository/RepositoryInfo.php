@@ -47,6 +47,16 @@ class RepositoryInfo
         return $this->emptyClass;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getEntityName()
+    {
+        return $this->entityName;
+    }
+
+
+
 
 
 

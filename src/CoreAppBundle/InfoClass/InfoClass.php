@@ -38,11 +38,15 @@ class InfoClass
     /** @var  ArrayCollection $extends */
     private $extends;
 
+    /** @var  ArrayCollection $propertyCall */
+    private $propertyCall;
+
     /**
      * infoClass constructor.
      */
     public function __construct($exist , $rootDir ,$className,$path = "AppBundle\\Entity")
     {
+        $this->propertyCall = new ArrayCollection();
         $this->classCall = new ArrayCollection();
         $this->infoClassContain = new ArrayCollection();
         $this->extends = new ArrayCollection();
@@ -51,7 +55,17 @@ class InfoClass
         $this->namespace = $path;
         $this->generatorClass =  new GeneratorClass($this);
         $this->loader = new Loader($this,$exist);
+    }
 
+    public function generateOtherClass()
+    {
+        if(method_exists($this->getLoader()->getClass(),"getClassPossible"))
+        {
+            foreach ($this->getLoader()->getClass()->getClassPossible() as $classPossible)
+            {
+                $this->addClassCall(array($classPossible, "inside","null","enity"));
+            }
+        }
     }
 
     public function generateClass()
@@ -59,7 +73,7 @@ class InfoClass
         /** @var InfoClass $infoClass */
         foreach ($this->infoClassContain as $infoClass)
         {
-            $infoClass->generatorClass->generateClass();
+            $infoClass->generateClass();
         }
         $this->generatorClass->generateClass();
     }
@@ -120,6 +134,20 @@ class InfoClass
             $this->classCall->add($classCall);
         }
     }
+
+    public function addPropertyCall($property)
+    {
+        if(!$this->propertyCall->contains($property))
+        {
+            $this->propertyCall->add($property);
+        }
+    }
+
+    public function getPropertyCall()
+    {
+        return $this->propertyCall;
+    }
+
     public function getClassCall()
     {
         return $this->classCall;
