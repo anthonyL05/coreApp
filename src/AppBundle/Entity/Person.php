@@ -7,7 +7,9 @@ use Neo4jBundle\Annotation\AnnotationProperty;
 use Neo4jBundle\Entity\GlobalEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
+
+
+   /**
  * @AnnotationClass(label="Person")
  */
 class Person extends GlobalEntity {

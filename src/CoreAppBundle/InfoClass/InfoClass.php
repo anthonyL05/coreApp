@@ -63,7 +63,9 @@ class InfoClass
         {
             foreach ($this->getLoader()->getClass()->getClassPossible() as $classPossible)
             {
-                $this->addClassCall(array($classPossible, "inside","null","enity"));
+                $classCalls = $this->getLoader()->getClass()->getClassPossible();
+                $classCalls->add($this->className);
+                $this->addClassCall(array($classPossible, "inside","null","enity",$classCalls));
             }
         }
     }

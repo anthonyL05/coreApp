@@ -5,8 +5,12 @@ namespace AppBundle\Entity;
 use CoreAppBundle\Annotation\Core;
 use Doctrine\Common\Collections\ArrayCollection;
 use AppBundle\Entity\Person;
+use Neo4jBundle\Annotation\AnnotationClass;
 
 
+/**
+ * @AnnotationClass(label="User")
+ */
 class CoreApp {
 
         /**

@@ -13,6 +13,7 @@ use CoreAppBundle\InfoClass\Construct;
 use CoreAppBundle\InfoClass\InfoClass;
 use CoreAppBundle\InfoClass\Methode;
 use CoreAppBundle\InfoClass\Parameter;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class GeneratorOtherClass
 {
@@ -33,7 +34,15 @@ class GeneratorOtherClass
             $infoClassNew->getLoader()->addUse("use Neo4jBundle\\Entity\\GlobalEntity;");
             $infoClassNew->getLoader()->getConstruct()->setContent($this->addParentConstruct($infoClassNew->getLoader()->getConstruct()->getContent()));
             $infoClassNew->addExtends("GlobalEntity");
-            $infoClassNew = $this->addOtherClassPossible($infoClassNew);
+            if(isset($otherClass[4]))
+            {
+                $classCall = $otherClass[4];
+            }
+            else
+            {
+                $classCall = new ArrayCollection();
+            }
+            $infoClassNew = $this->addOtherClassPossible($infoClassNew,$otherClass[1],$classCall);
             $infoClassNew->generateOtherClass();
             $infoClassNew = $updateClass->update($infoClassNew);
             $infoClass->addInfoClassContain($infoClassNew);
@@ -51,7 +60,7 @@ class GeneratorOtherClass
         return $contentConstruct;
     }
 
-    public function addOtherClassPossible(InfoClass $infoClass)
+    public function addOtherClassPossible(InfoClass $infoClass,$type,$classCall)
     {
         /** @var Methode $methodeExist */
         foreach ($infoClass->getLoader()->getMethodes() as $methodeExist)
@@ -64,6 +73,18 @@ class GeneratorOtherClass
         $methode = new Methode();
         $methode->setMethodeName("getClassPossible");
         $contains = '$classPossible = new ArrayCollection();';
+
+        if($type == "inside")
+        {
+            foreach ($classCall as $class)
+            {
+                if($class != $infoClass->getClassName())
+                {
+                    $contains .= "\n        \$classPossible->add('".$class."');";
+                }
+            }
+
+        }
         $return = 'return $classPossible;';
         $content = <<<EOF
     $contains

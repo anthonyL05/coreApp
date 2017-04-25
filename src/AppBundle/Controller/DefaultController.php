@@ -9,7 +9,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class DefaultController extends Controller
 {
-
+    /**
+     * @Route("/")
+     */
     public function indexAction()
     {
         $app = $this->get('core.app');
@@ -18,9 +20,6 @@ class DefaultController extends Controller
     }
 
 
-    /**
-     * @Route("/")
-     */
     public function FindAllTesteAction()
     {
         $em = $this->get('neo4j_manager');

@@ -79,6 +79,24 @@ class Loader
             $construct = new Construct();
             $this->setConstruct($construct);
         }
+        $this->addPhpDocClass();
+    }
+
+    public function addPhpDocClass()
+    {
+        $class = $this->InfoClass->getClassName();
+        if( !strstr($this->phpDocClass, "@AnnotationClass"))
+        {
+            $phpDocClass = <<<EOF
+
+   /**
+ * @AnnotationClass(label="$class")
+ */
+EOF;
+            $this->phpDocClass = $phpDocClass;
+            $this->addUse("use Neo4jBundle\\Annotation\\AnnotationClass;");
+
+        }
 
     }
 
@@ -306,6 +324,15 @@ class Loader
     {
         return $this->class;
     }
+
+    /**
+     * @return string
+     */
+    public function getPhpDocClass()
+    {
+        return $this->phpDocClass;
+    }
+
 
 
 

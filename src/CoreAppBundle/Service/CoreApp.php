@@ -43,6 +43,7 @@ class CoreApp
     }
     public function generateCore()
     {
+
         $this->infoClassCore = $this->updateClass->update($this->infoClassCore);
         $this->infoClassCore = $this->generatorOtherClass->checkOtherClass($this->infoClassCore,$this->rootDir,$this->updateClass);
         $this->infoClassCore->generateClass();

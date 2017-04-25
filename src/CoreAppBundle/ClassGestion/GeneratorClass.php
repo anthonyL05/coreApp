@@ -29,6 +29,8 @@ class GeneratorClass
     {
         $infoClass = $this->infoClass;
         $namespace = "namespace ".$infoClass->getNamespace().";";
+        $docClassPhp = $infoClass->getLoader()->getPhpDocClass();
+
         $className = "class ".$infoClass->getCLassName();
         if(count($infoClass->getExtends()) > 0)
         {
@@ -50,6 +52,7 @@ $namespace
 
 $use
 
+$docClassPhp
 $className {
 
     $property
